@@ -1,32 +1,20 @@
-// Seleção de elementos do DOM
-const numeroSenha = document.querySelector('#numero-caracteres');
-const campoSenha = document.querySelector('#campo-senha');
-const botoes = document.querySelectorAll('.parametro-senha__botao');
-const checkbox = document.querySelectorAll('.checkbox');
-const forcaSenhaBarra = document.querySelector('#barra-forca-ativa');
-const valorEntropia = document.querySelector('#texto-entropia');
-const spanAnoAtual = document.querySelector('#ano-atual');
-
-// Configuração inicial
+const numeroSenha = document.querySelector('.parametro-senha__texto');
 let tamanhoSenha = 12;
 numeroSenha.textContent = tamanhoSenha;
 
-// Bancos de caracteres
 const letrasMaiusculas = 'ABCDEFGHIJKLMNOPQRSTUVXYWZ';
 const letrasMinusculas = 'abcdefghijklmnopqrstuvxywz';
 const numeros = '0123456789';
-const simbolos = '!@%*?+-_.&'; // Adicionei alguns símbolos comuns
+const simbolos = '!@%*?';
 
-// Atribuição de eventos
-botoes[0].onclick = diminuiTamanho; // Botão -
-botoes[1].onclick = aumentaTamanho; // Botão +
+const botoes = document.querySelectorAll('.parametro-senha__botao');
+const campoSenha = document.querySelector('#campo-senha');
+const checkbox = document.querySelectorAll('.checkbox');
+const forcaSenha = document.querySelector('.forca');
 
-// Evento para checkboxes
-for (let i = 0; i < checkbox.length; i++) {
-    checkbox[i].onclick = geraSenha;
-}
+botoes[0].onclick = diminuiTamanho;
+botoes[1].onclick = aumentaTamanho;
 
-// Funções dos botões
 function diminuiTamanho() {
     if (tamanhoSenha > 1) {
         tamanhoSenha--;
@@ -43,77 +31,61 @@ function aumentaTamanho() {
     geraSenha();
 }
 
-// Função principal: Gerar a senha
+for (let i = 0; i < checkbox.length; i++) {
+    checkbox[i].onclick = geraSenha;
+}
+
 function geraSenha() {
     let alfabeto = '';
+    if (checkbox[0].checked) {
+        alfabeto = alfabeto + letrasMaiusculas;
+    }
+    if (checkbox[1].checked) {
+        alfabeto = alfabeto + letrasMinusculas;
+    }
+    if (checkbox[2].checked) {
+        alfabeto = alfabeto + numeros;
+    }
+    if (checkbox[3].checked) {
+        alfabeto = alfabeto + simbolos;
+    }
     
-    // Verificação dos checkboxes (usando os IDs definidos no HTML)
-    if (document.querySelector('#check-maiusculo').checked) alfabeto += letrasMaiusculas;
-    if (document.querySelector('#check-minusculo').checked) alfabeto += letrasMinusculas;
-    if (document.querySelector('#check-numero').checked) alfabeto += numeros;
-    if (document.querySelector('#check-simbolo').checked) alfabeto += simbolos;
-
     let senha = '';
-    
-    // Se nenhum checkbox estiver marcado, limpa o campo
     if (alfabeto.length === 0) {
         campoSenha.value = '';
-        classificaSenha(0);
-        valorEntropia.textContent = "Selecione pelo menos uma característica.";
+        forcaSenha.classList.remove('fraca', 'media', 'forte');
+        document.querySelector('.entropia').textContent = "Selecione uma opção.";
         return;
     }
 
-    // Geração aleatória
     for (let i = 0; i < tamanhoSenha; i++) {
-        let numeroAleatorio = Math.floor(Math.random() * alfabeto.length);
-        senha += alfabeto[numeroAleatorio];
+        let numeroAleatorio = Math.random() * alfabeto.length;
+        numeroAleatorio = Math.floor(numeroAleatorio);
+        senha = senha + alfabeto[numeroAleatorio];
     }
-    
     campoSenha.value = senha;
     classificaSenha(alfabeto.length);
 }
 
-// Função de classificação da força da senha (Entropia)
 function classificaSenha(tamanhoAlfabeto) {
-    if (tamanhoAlfabeto === 0) {
-        forcaSenhaBarra.style.width = '0%';
-        forcaSenhaBarra.classList.remove('fraca', 'media', 'forte');
-        return;
-    }
-
-    // Cálculo da entropia
     let entropia = tamanhoSenha * Math.log2(tamanhoAlfabeto);
+    forcaSenha.classList.remove('fraca', 'media', 'forte');
     
-    // Reseta classes e define largura baseada na entropia (máximo aprox 130 para 20 chars)
-    forcaSenhaBarra.classList.remove('fraca', 'media', 'forte');
-    
-    // Limita a largura visual para 100%
-    let larguraVisual = Math.min((entropia / 100) * 100, 100);
-    forcaSenhaBarra.style.width = `${larguraVisual}%`;
-
-    // Lógica de classificação
     if (entropia > 57) {
-        forcaSenhaBarra.classList.add('forte');
-    } else if (entropia > 35) {
-        forcaSenhaBarra.classList.add('media');
-    } else {
-        forcaSenhaBarra.classList.add('fraca');
+        forcaSenha.classList.add('forte');
+    } else if (entropia > 35 && entropia <= 57) {
+        forcaSenha.classList.add('media');
+    } else if (entropia <= 35) {
+        forcaSenha.classList.add('fraca');
     }
-
-    // Texto descritivo
-    let diasParaQuebrar = Math.floor(2 ** entropia / (100e6 * 60 * 60 * 24));
     
-    if (diasParaQuebrar < 1) {
-        valorEntropia.textContent = "Um computador pode levar instantes para descobrir essa senha.";
-    } else {
-        valorEntropia.textContent = "Um computador pode levar até " + diasParaQuebrar + " dias para descobrir essa senha.";
-    }
+    const valorEntropia = document.querySelector('.entropia');
+    let calculoDias = Math.floor(2 ** entropia / (100e6 * 60 * 60 * 24));
+    valorEntropia.textContent = "Um computador pode levar até " + (calculoDias < 1 ? 1 : calculoDias) + " dias para descobrir essa senha.";
 }
 
-// Adiciona o ano atual no footer
-if (spanAnoAtual) {
-    spanAnoAtual.textContent = new Date().getFullYear();
-}
+// Atualiza o ano automaticamente no footer
+document.getElementById('ano-atual').textContent = new Date().getFullYear();
 
-// Gera a primeira senha ao carregar a página
+// Executa uma vez ao carregar a página
 geraSenha();
