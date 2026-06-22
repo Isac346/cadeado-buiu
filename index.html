@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Senha - Buiu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <section class="conteudo">
+        <div class="conteudo-titulo">
+            <svg class="cadeado-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 15V17M6 12H18C19.1046 12 20 12.8954 20 14V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V14C4 12.8954 4.89543 12 6 12ZM16 12V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V12H16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h2 class="titulo-principal">Gerador de senhas do Mestre Buiu</h2>
+            <h3 class="titulo-secundario">Gere instantaneamente uma senha aleatória e segura.</h3>
+        </div>
+        
+        <div class="conteudo-senha">
+            <label for="campo-senha">Senha Gerada</label>
+            <input name="senha" type="text" id="campo-senha" readonly placeholder="Sua senha aparecerá aqui">
+        </div>
+        
+        <div class="parametro">
+            <h3 class="parametro-titulo">Personalize sua senha</h3>
+            
+            <div class="parametro-coluna__senha">
+                <div class="parametro-senha">
+                    <h4 class="parametro-senha__titulo">Número de caracteres</h4>
+                    <div class="parametro-senha-botoes">
+                        <button class="parametro-senha__botao" id="botao-diminuir">-</button>
+                        <p class="parametro-senha__texto" id="numero-caracteres">12</p>
+                        <button class="parametro-senha__botao" id="botao-aumentar">+</button>
+                    </div>
+                </div>                
+                
+                <div class="parametro-senha">
+                    <h4 class="parametro-senha__titulo">Características da senha</h4>
+                    <div class="parametro-senha-checkbox">
+                        <input name="maiusculo" type="checkbox" class="checkbox" id="check-maiusculo" checked>
+                        <label for="check-maiusculo">Letras maiúsculas</label>
+                    </div>
+                    <div class="parametro-senha-checkbox">
+                        <input name="minusculo" type="checkbox" class="checkbox" id="check-minusculo">
+                        <label for="check-minusculo">Letras minúsculas</label>
+                    </div>
+                    <div class="parametro-senha-checkbox">
+                        <input name="numero" type="checkbox" class="checkbox" id="check-numero">
+                        <label for="check-numero">Números</label>
+                    </div>
+                    <div class="parametro-senha-checkbox">
+                        <input name="simbolo" type="checkbox" class="checkbox" id="check-simbolo">
+                        <label for="check-simbolo">Símbolos</label>
+                    </div>
+                </div>
+                
+                <div class="parametro-senha">
+                    <h4 class="parametro-senha__titulo">Força da senha</h4>
+                    <div class="barra-forca-container">
+                        <div class="barra-forca-fundo"></div>
+                        <div class="forca fraca" id="barra-forca-ativa"></div>
+                    </div>
+                    <div class="parametro-senha-textos">
+                        <p>Fraca</p>
+                        <p>Média</p>
+                        <p>Forte</p>
+                    </div>
+                    <p class="entropia" id="texto-entropia"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>
+                <strong>Gerador de Senhas do Professor Buiu</strong> • 
+                Desenvolvido por <strong>Professor Rafael Biano</strong>
+            </p>
+            <p>
+                Projeto para estudo de JavaScript • 
+                <span id="ano-atual"></span>
+            </p>
+            
+            <div class="footer-links">
+                <a href="#" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
